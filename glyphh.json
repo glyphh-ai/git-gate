@@ -1,0 +1,36 @@
+{
+  "name": "git_gate",
+  "description": "Before Claude makes a git move (commit, push, merge, deploy...), asks the git-moves Ada model what Chris would do in that repo state, from his own past rulings; records what he decides so it learns",
+  "python": "3.13",
+  "functions": {
+    "check": {
+      "description": "What to do about one git move: proceed, fetch_first, branch_first, open_pr, check_unpushed, use_main_checkout, restart_from_main, ask_chris or stop, with the precedents it stands on",
+      "inputs": {
+        "type": "object",
+        "properties": { "case": { "type": "object" } },
+        "required": ["case"],
+        "additionalProperties": false
+      },
+      "writes": false
+    },
+    "record": {
+      "description": "Teach it: one git move and what Chris decided about it",
+      "inputs": {
+        "type": "object",
+        "properties": {
+          "case": { "type": "object" },
+          "outcome": {
+            "type": "string",
+            "enum": ["proceed", "fetch_first", "branch_first", "open_pr", "check_unpushed", "use_main_checkout", "restart_from_main", "ask_chris", "stop"]
+          }
+        },
+        "required": ["case", "outcome"],
+        "additionalProperties": false
+      },
+      "writes": true
+    }
+  },
+  "hosts": [],
+  "clis": ["glyphh"],
+  "limits": { "seconds": 60, "memory_mb": 256 }
+}
